@@ -23,21 +23,22 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
-alias update='sudo pacman -Syu'
-alias install='sudo pacman -S'
+alias brave="brave --incognito"
+
+alias vlc="env QT_SCALE_FACTOR=1.25 vlc"
 
 alias grep='grep --color=auto'
 
 
 # ─────────────────────────────────────
 # Git shortcuts
-# ─────────────────────────────────────
-
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline --graph --decorate'
+# # ─────────────────────────────────────
+#
+# alias gs='git status'
+# alias ga='git add'
+# alias gc='git commit'
+# alias gp='git push'
+# alias gl='git log --oneline --graph --decorate'
 
 
 # ─────────────────────────────────────
@@ -59,7 +60,11 @@ set -gx TERM xterm-256color
 # Greeting
 # ─────────────────────────────────────
 
-set -g fish_greeting "Welcome back, "(whoami)"."
+set -g fish_greeting "LOGGED: Commanding officer aboard.
+
+XO Bash stands relieved.
+
+Captain Ahab has the deck."
 
 
 # ─────────────────────────────────────
