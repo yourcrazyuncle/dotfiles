@@ -139,6 +139,7 @@ function prompt_network
     # ───────────────────────────────────────────────
 
     echo
+    echo -n "    "
 
     set -l has_ip false
 
