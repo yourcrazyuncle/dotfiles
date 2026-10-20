@@ -136,6 +136,16 @@ function prompt_network
     end
 
     # ───────────────────────────────────────────────
+    
+    # ───────────────────────────────────────────────
+    # Start second line: IP addresses
+    # ───────────────────────────────────────────────
+
+    echo
+
+    set -l has_ip false
+
+    # ───────────────────────────────────────────────
     # Local IPv4 address
     # ───────────────────────────────────────────────
 
@@ -145,13 +155,35 @@ function prompt_network
 
         if test -n "$local_ip"
 
-            set_color brblack
-            echo -n "  │  "
-
             set_color blue
             echo -n "󰩟 $local_ip"
+
+            set has_ip true
         end
     end
+
+    # ───────────────────────────────────────────────
+    # Tailscale IP address
+    # ───────────────────────────────────────────────
+
+    set -l ts_ip (ip -4 addr show tailscale0 2>/dev/null | awk '/inet / {split($2,a,"/"); print a[1]; exit}')
+
+    if test -n "$ts_ip"
+
+        # Only print separator if local IP exists
+        if test "$has_ip" = true
+            set_color brblack
+            echo -n "  │  "
+        end
+
+        set_color magenta
+        echo -n "󰒃 $ts_ip"
+    end
+
+    set_color normal
+
+end
+
 
     # ───────────────────────────────────────────────
     # Tailscale (independent of physical interface)
