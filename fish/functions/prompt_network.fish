@@ -9,7 +9,6 @@ function prompt_network
     set -l eth_if ""
 
     for entry in (env LC_ALL=C nmcli -t -f DEVICE,TYPE,STATE device status 2>/dev/null)
-
         set -l fields (string split ":" -- "$entry")
 
         if test (count $fields) -lt 3
@@ -47,8 +46,7 @@ function prompt_network
 
         set interface "$wifi_if"
 
-        # Get actual SSID and signal strength
-        # from the active Wi-Fi access point.
+        # Obtain SSID and signal strength
 
         set -l active_ap (env LC_ALL=C nmcli -t -e no -f IN-USE,SSID,SIGNAL device wifi list --rescan no ifname "$interface" 2>/dev/null | string match -r '^\*:.*:[0-9]+$' | head -n 1)
 
@@ -60,7 +58,8 @@ function prompt_network
             set signal (string replace -r '^.*:([0-9]+)$' '$1' -- "$active_ap")
         end
 
-        # Fallback to the NetworkManager connection name
+        # Fallback to NetworkManager connection name
+
         if test -z "$ssid"
             set ssid (nmcli -g GENERAL.CONNECTION device show "$interface" 2>/dev/null)
         end
@@ -125,7 +124,7 @@ function prompt_network
         echo -n "ETHERNET"
 
     # ───────────────────────────────────────────────
-    # No active NetworkManager physical connection
+    # No physical connection
     # ───────────────────────────────────────────────
 
     else
@@ -136,18 +135,15 @@ function prompt_network
     end
 
     # ───────────────────────────────────────────────
-    
-    # ───────────────────────────────────────────────
-    # Start second line: IP addresses
+    # Second line: IP addresses
     # ───────────────────────────────────────────────
 
     echo
+    echo -n "    "
 
     set -l has_ip false
 
-    # ───────────────────────────────────────────────
     # Local IPv4 address
-    # ───────────────────────────────────────────────
 
     if test -n "$interface"
 
@@ -163,38 +159,17 @@ function prompt_network
     end
 
     # ───────────────────────────────────────────────
-    # Tailscale IP address
+    # Tailscale IPv4 address
     # ───────────────────────────────────────────────
 
     set -l ts_ip (ip -4 addr show tailscale0 2>/dev/null | awk '/inet / {split($2,a,"/"); print a[1]; exit}')
 
     if test -n "$ts_ip"
 
-        # Only print separator if local IP exists
         if test "$has_ip" = true
             set_color brblack
             echo -n "  │  "
         end
-
-        set_color magenta
-        echo -n "󰒃 $ts_ip"
-    end
-
-    set_color normal
-
-end
-
-
-    # ───────────────────────────────────────────────
-    # Tailscale (independent of physical interface)
-    # ───────────────────────────────────────────────
-
-    set -l ts_ip (ip -4 addr show tailscale0 2>/dev/null | awk '/inet / {split($2,a,"/"); print a[1]; exit}')
-
-    if test -n "$ts_ip"
-
-        set_color brblack
-        echo -n "  │  "
 
         set_color magenta
         echo -n "󰒃 $ts_ip"
